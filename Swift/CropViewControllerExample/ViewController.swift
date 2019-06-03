@@ -13,15 +13,15 @@ class ViewController: UIViewController, CropViewControllerDelegate, UIImagePicke
     private let imageView = UIImageView()
     
     private var image: UIImage?
-    private var croppingStyle = CropViewCroppingStyle.default
-    
+    private var croppingStyle = CropViewCroppingStyle.circular
+    private var cornerRadius: NSInteger = 0
     private var croppedRect = CGRect.zero
     private var croppedAngle = 0
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = (info[UIImagePickerController.InfoKey.originalImage] as? UIImage) else { return }
-        
-        let cropController = CropViewController(croppingStyle: croppingStyle, image: image)
+        let cornerRadius = 56
+        let cropController = CropViewController(croppingStyle: croppingStyle, image: image, cornerRadius: cornerRadius)
         cropController.delegate = self
         
         // Uncomment this if you wish to provide extra instructions via a title label
@@ -47,7 +47,7 @@ class ViewController: UIViewController, CropViewControllerDelegate, UIImagePicke
         //cropController.cancelButtonTitle = "Title"
         
         self.image = image
-        
+        self.cornerRadius = cornerRadius
         //If profile picture, push onto the same navigation stack
         if croppingStyle == .circular {
             if picker.sourceType == .camera {
@@ -128,7 +128,7 @@ class ViewController: UIViewController, CropViewControllerDelegate, UIImagePicke
     @objc public func addButtonTapped(sender: AnyObject) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let defaultAction = UIAlertAction(title: "Crop Image", style: .default) { (action) in
-            self.croppingStyle = .default
+            self.croppingStyle = .circular
             
             let imagePicker = UIImagePickerController()
             imagePicker.sourceType = .photoLibrary
@@ -161,7 +161,7 @@ class ViewController: UIViewController, CropViewControllerDelegate, UIImagePicke
     
     @objc public func didTapImageView() {
         // When tapping the image view, restore the image to the previous cropping state
-        let cropViewController = CropViewController(croppingStyle: self.croppingStyle, image: self.image!)
+        let cropViewController = CropViewController(croppingStyle: self.croppingStyle, image: self.image!, cornerRadius:self.cornerRadius)
         cropViewController.delegate = self
         let viewFrame = view.convert(imageView.frame, to: navigationController!.view)
         
@@ -183,7 +183,7 @@ class ViewController: UIViewController, CropViewControllerDelegate, UIImagePicke
     public func layoutImageView() {
         guard imageView.image != nil else { return }
         
-        let padding: CGFloat = 20.0
+        let padding: CGFloat = 10.0
         
         var viewFrame = self.view.bounds
         viewFrame.size.width -= (padding * 2.0)

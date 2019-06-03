@@ -95,7 +95,7 @@ open class CropViewController: UIViewController, TOCropViewControllerDelegate {
      The view controller's delegate that will receive the resulting
      cropped image, as well as crop information.
     */
-    public weak var delegate: CropViewControllerDelegate? {
+    public var delegate: CropViewControllerDelegate? {
         didSet { self.setUpDelegateHandlers() }
     }
     
@@ -434,8 +434,8 @@ open class CropViewController: UIViewController, TOCropViewControllerDelegate {
      @param style The cropping style that will be used with this view controller (eg, rectangular, or circular)
      @param image The image that will be cropped
      */
-    public init(croppingStyle: CropViewCroppingStyle, image: UIImage) {
-        self.toCropViewController = TOCropViewController(croppingStyle: croppingStyle, image: image)
+    public init(croppingStyle: CropViewCroppingStyle, image: UIImage, cornerRadius : NSInteger) {
+        self.toCropViewController = TOCropViewController(croppingStyle: croppingStyle, image: image, cornerRadius:cornerRadius)
         super.init(nibName: nil, bundle: nil)
         setUpCropController()
     }

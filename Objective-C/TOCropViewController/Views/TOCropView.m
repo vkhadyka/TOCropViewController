@@ -118,14 +118,15 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 
 - (instancetype)initWithImage:(UIImage *)image
 {
-    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image];
+    return [self initWithCroppingStyle:TOCropViewCroppingStyleDefault image:image cornerRadius:0];
 }
 
-- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image
+- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image cornerRadius:(NSInteger)radius
 {
     if (self = [super init]) {
         _image = image;
         _croppingStyle = style;
+        _cornerRadius=radius;
         [self setup];
     }
     
@@ -227,7 +228,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     
     // The following setup isn't needed during circular cropping
     if (circularMode) {
-        UIBezierPath *circlePath = [UIBezierPath bezierPathWithOvalInRect:(CGRect){0,0,kTOCropViewCircularPathRadius, kTOCropViewCircularPathRadius}];
+        UIBezierPath *circlePath = [UIBezierPath bezierPathWithRoundedRect:(CGRect){0,0,kTOCropViewCircularPathRadius, kTOCropViewCircularPathRadius} byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(_cornerRadius, _cornerRadius)];
         self.circularMaskLayer = [[CAShapeLayer alloc] init];
         self.circularMaskLayer.path = circlePath.CGPath;
         self.foregroundContainerView.layer.mask = self.circularMaskLayer;
